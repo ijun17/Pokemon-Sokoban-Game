@@ -14,11 +14,13 @@ import javax.swing.JPanel;
 
 public class MultiLevelScreen extends JPanel {
 	private JButton[] levelBtn;
+	private JButton[] replayBtn;
 	private JButton back;
 	private JLabel label;
 	private Image menuImage;
 	private Graphics menuGraphic;
 	private ImageIcon background= new ImageIcon("src/resources/gold2.jpg");  
+	private int clearLevel=0;
 
 	public void paint(Graphics g) {
 		menuImage = createImage(450, 300);
@@ -43,7 +45,27 @@ public class MultiLevelScreen extends JPanel {
 		label.setFont(new Font("¸¼Àº°íµñ",Font.BOLD,15)); 
 		label.setBounds(-95, 20, 620, 40);
 		add(label);
-
+		
+		
+		//Score
+		for(int i=5; i<10; i++) {
+			Score score = new Score(i);
+			int stepCount = score.getScoreRecord();
+			JLabel scoreLabel;
+			if(stepCount == 99999999) {
+				scoreLabel = new JLabel("not completed");
+				scoreLabel.setForeground(Color.GRAY);
+			}else {
+				scoreLabel = new JLabel("Score: "+ stepCount);
+				scoreLabel.setForeground(Color.ORANGE);
+				clearLevel++;
+			}
+			scoreLabel.setFont(new Font("¸¼Àº°íµñ",Font.BOLD, 12));
+			scoreLabel.setBounds(300, 60+35*(i-5) , 120, 30);
+			add(scoreLabel);
+		}
+		
+		
 		//¹öÆ°µé
 		levelBtn = new JButton[5];
 		for(int i=0; i<5; i++) {
@@ -57,7 +79,25 @@ public class MultiLevelScreen extends JPanel {
 			levelBtn[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					setVisible(false);
-					ScreenManager.setPanel("multiboard", tmp+5);
+					ScreenManager.setPanel("board-play", tmp+5);
+				}
+			});
+		}
+
+		//´Ù½Ãº¸±â ¹öÆ°µé
+		replayBtn = new JButton[clearLevel];
+		for(int i=0; i<clearLevel; i++) {
+			replayBtn[i] = new JButton("replay");
+			replayBtn[i].setBorderPainted(false);
+			replayBtn[i].setContentAreaFilled(false);
+			//replayBtn[i].setOpaque(false);
+			replayBtn[i].setBounds(300, 60+35*i, 120, 30);
+			add(replayBtn[i]);
+			final int tmp = i;
+			replayBtn[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+					ScreenManager.setPanel("board-replay", tmp+5);
 				}
 			});
 		}
@@ -76,21 +116,6 @@ public class MultiLevelScreen extends JPanel {
 			}
 		});
 
-		//Score
-		for(int i=5; i<10; i++) {
-			Score score = new Score(i);
-			int stepCount = score.getScoreRecord();
-			JLabel scoreLabel;
-			if(stepCount == 99999999) {
-				scoreLabel = new JLabel("not completed");
-				scoreLabel.setForeground(Color.GRAY);
-			}else {
-				scoreLabel = new JLabel("Score: "+ stepCount);
-				scoreLabel.setForeground(Color.ORANGE);
-			}
-			scoreLabel.setFont(new Font("¸¼Àº°íµñ",Font.BOLD, 12));
-			scoreLabel.setBounds(300, 60+35*(i-5) , 120, 30);
-			add(scoreLabel);
-		}
+		
 	}
 }

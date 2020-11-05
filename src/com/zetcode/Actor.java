@@ -9,6 +9,7 @@ public class Actor {
     private int x;
     private int y;
     private Image image;
+    public String imageDirectory = "src/resources/";
 
     public Actor(int x, int y) {
         
@@ -48,24 +49,4 @@ public class Actor {
     	int [][]direction = {{SPACE, 0}, {-SPACE, 0}, {0, SPACE}, {0, -SPACE}};
     	return x() - direction[dir][0] == actor.x() && y() - direction[dir][1] == actor.y();
     }
-
-//    public boolean isLeftCollision(Actor actor) {
-//        
-//        return x() - SPACE == actor.x() && y() == actor.y();
-//    }
-//
-//    public boolean isRightCollision(Actor actor) {
-//        
-//        return x() + SPACE == actor.x() && y() == actor.y();
-//    }
-//
-//    public boolean isTopCollision(Actor actor) {
-//        
-//        return y() - SPACE == actor.y() && x() == actor.x();
-//    }
-//
-//    public boolean isBottomCollision(Actor actor) {
-//        
-//        return y() + SPACE == actor.y() && x() == actor.x();
-//    }
 }

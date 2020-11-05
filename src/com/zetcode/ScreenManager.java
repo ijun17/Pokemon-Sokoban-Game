@@ -2,7 +2,7 @@ package com.zetcode;
 
 //import java.awt.Window;
 
-import javax.swing.ImageIcon;
+//import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -45,8 +45,13 @@ public class ScreenManager extends JFrame{
     		currentPanel = new MultiLevelScreen();
     		break;
     		
-    	case "multiboard":
-    		currentPanel = new MultiBoard(levelNum);
+    	case "board-play":
+    		currentPanel = new Board(levelNum);
+    		break;
+    		
+    	case "board-replay":
+    		currentPanel = new Board(levelNum);
+    		((Board)currentPanel).replay();
     		break;
     		
     	default:
@@ -58,9 +63,9 @@ public class ScreenManager extends JFrame{
         add(currentPanel);
         currentPanel.requestFocusInWindow();
         setTitle("Sokoban");
-        if(currentPanel instanceof MultiBoard) {
-           setSize(((MultiBoard)currentPanel).getBoardWidth() + OFFSET,
-        		   ((MultiBoard)currentPanel).getBoardHeight()+ 2*OFFSET);
+        if(currentPanel instanceof Board) {
+           setSize(((Board)currentPanel).getBoardWidth() + OFFSET,
+        		   ((Board)currentPanel).getBoardHeight()+ 2*OFFSET);
         }else setSize(455,300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

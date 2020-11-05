@@ -8,9 +8,11 @@ public class GameDataManager {
 	private Level level;
 	private Score score;
 	private ActorManager actorManager;
+	private Replay replay;
 
 	private boolean isCompleted;
 	private int levelNum;
+	private boolean goldenBall;
 
 	private int w=0;
 	private int h=0;
@@ -19,9 +21,11 @@ public class GameDataManager {
 		level = new Level();
 		score = new Score(lv);
 		actorManager = new ActorManager();
+		replay = new Replay(lv);
 
 		isCompleted = false;
 		levelNum = lv;
+		goldenBall=false;
 
 		readMap(level.getLevel(lv));
 	}
@@ -79,7 +83,7 @@ public class GameDataManager {
 		
 		ArrayList<Baggage> balls = actorManager.getBalls();
 		ArrayList<Area> areas = actorManager.getAreas();
-		System.out.println(balls.size()+" "+areas.size());
+		//System.out.println(balls.size()+" "+areas.size());
 		
 		int nOfBalls = balls.size();
 		int finishedBags = 0;
@@ -94,16 +98,19 @@ public class GameDataManager {
 		}
 		if (finishedBags == nOfBalls) {
 			if(actorManager.getLastMoveBag() instanceof GoldenBall) {
-				score.updateScore();
-				score.clearGoldenBall();
+				goldenBall=true;
 				Sound.Play("src/resources/Victory.wav");
+				if(score.getScoreRecord()>score.getStepCount()) {
+					score.updateScore();
+					replay.saveReplay();
+				}
 			}
 			isCompleted = true;
 			return true;
 		}
 		else return false;
 	}
-	public void updateGameData(KeyEvent e) {
+	public void updateGameData(int keyCode) {
 
 		if (isCompleted()) {
 			return;
@@ -114,15 +121,18 @@ public class GameDataManager {
 				KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, KeyEvent.VK_S};
 
 		for(int i=0; i<key.length; i++) {
-			if(e.getKeyCode() == key[i] && i/4<=levelNum/5) {
+			if(keyCode == key[i] && i/4<=levelNum/5) {
 				boolean isMoved = actorManager.movePlayer(i);
-				if(isMoved)score.addStepCount();
+				if(isMoved) {//성공적으로 움직이면
+					score.addStepCount();
+					replay.addMovingKey(i);
+				}
 			}
 		}
 
-		if(e.getKeyCode() == KeyEvent.VK_R) {}
-		if(e.getKeyCode() == KeyEvent.VK_N) {}
-		if(e.getKeyCode() == KeyEvent.VK_M) {}
+		if(keyCode == KeyEvent.VK_R) {}
+		if(keyCode == KeyEvent.VK_N) {}
+		if(keyCode == KeyEvent.VK_M) {}
 	}
 
 	public int getStepCount() {return score.getStepCount();}
@@ -134,7 +144,7 @@ public class GameDataManager {
 		allActor.addAll(actorManager.getPlayers());
 		return allActor;
 	}
-	public int getGoldenBall() {return score.getGoldenBall();}
+	public boolean getGoldenBall() {return goldenBall;}
 	public int getBoardWidth() {return w;}
 	public int getBoardHeight() {return h;}
 }

@@ -15,25 +15,23 @@ public class Score {
 	
 	private int level;
 	private int stepCount;
-	private int goldenball;
 	
 	private int recordStepCount;
 	
 	public Score(int level) {
 		this.level = level;
 		stepCount=0;
-		goldenball=0;
 		if(!readFile()) {
 			recordStepCount = 99999999;
 		}
 	}
 	
-	private void makeFile(int sc, int gb) {
-		String txt = sc+"\n"+gb;
+	private void makeFile() {
+		String txt = stepCount+"\n";
         String fileName = "score"+(this.level)+".txt";
         File file = new File(fileName);
         try{
-            FileWriter fw = new FileWriter(file, true);
+            FileWriter fw = new FileWriter(file, false);
             fw.write(txt);
             
             fw.close();
@@ -68,14 +66,12 @@ public class Score {
 
 	public void updateScore() {
 		if(recordStepCount>stepCount) {
-			makeFile(stepCount, goldenball);
+			makeFile();
 		}
 	}
 	
 	public void addStepCount() {stepCount++;}
 	
 	public int getScoreRecord() {return recordStepCount;}
-	public void clearGoldenBall() {goldenball =1;}
-	public int getGoldenBall() { return goldenball;}
-	 public int getStepCount() {return stepCount;}
+	public int getStepCount() {return stepCount;}
 }

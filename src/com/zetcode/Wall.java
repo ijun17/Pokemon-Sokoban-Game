@@ -20,7 +20,7 @@ public class Wall extends Actor {
     
     private void initWall() {
         
-        ImageIcon iicon = new ImageIcon("src/resources/poketmontree.png");
+        ImageIcon iicon = new ImageIcon(imageDirectory+"poketmontree.png");
         image = iicon.getImage();
         setImage(image);
     }

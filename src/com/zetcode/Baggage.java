@@ -13,7 +13,7 @@ public class Baggage extends Actor {
     
     private void initBaggage() {
         String fileName[]= {"pokeball3.png", "masterball3.png", "box.png"};
-        ImageIcon iicon = new ImageIcon("src/resources/"+fileName[bagType]);
+        ImageIcon iicon = new ImageIcon(imageDirectory+fileName[bagType]);
         Image image = iicon.getImage();
         setImage(image);
     }
