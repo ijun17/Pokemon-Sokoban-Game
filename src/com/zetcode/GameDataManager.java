@@ -99,7 +99,7 @@ public class GameDataManager {
 		if (finishedBags == nOfBalls) {
 			if(actorManager.getLastMoveBag() instanceof GoldenBall) {
 				goldenBall=true;
-				Sound.Play("src/resources/Victory.wav");
+				Sound.Play(Resource.musicDir+"Victory.wav");
 				if(score.getScoreRecord()>score.getStepCount()) {
 					score.updateScore();
 					replay.saveReplay();

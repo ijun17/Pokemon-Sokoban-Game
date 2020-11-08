@@ -6,8 +6,8 @@ package com.zetcode;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ScreenManager extends JFrame{
-	static private ScreenManager singleton = new ScreenManager();
+public class ScreenManager{
+	static private JFrame screen = new JFrame();  //singleton
 	static private final int OFFSET = 30;   //is not static
 	static private String panelName;
 	static private JPanel currentPanel;
@@ -18,16 +18,16 @@ public class ScreenManager extends JFrame{
 	
 	static public void setPanel(String pn) {
        panelName= pn;
-       singleton.updateUI();
+       updateUI();
     }
     
 	static public void setPanel(String pn, int ln) {
        panelName = pn;
        levelNum = ln;
-       singleton.updateUI();
+       updateUI();
     }
     
-    private void updateUI() {
+    static private void updateUI() {
     	switch(panelName) {
     	case "menuscreen":
     		currentPanel = new MenuScreen();
@@ -59,15 +59,15 @@ public class ScreenManager extends JFrame{
     		break;
     	}
     	
-    	this.setVisible(true);
-        add(currentPanel);
+    	screen.setVisible(true);
+    	screen.add(currentPanel);
         currentPanel.requestFocusInWindow();
-        setTitle("Sokoban");
+        screen.setTitle("Sokoban");
         if(currentPanel instanceof Board) {
-           setSize(((Board)currentPanel).getBoardWidth() + OFFSET,
+        	screen.setSize(((Board)currentPanel).getBoardWidth() + OFFSET,
         		   ((Board)currentPanel).getBoardHeight()+ 2*OFFSET);
-        }else setSize(455,300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        }else screen.setSize(455,300);
+        screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        screen.setLocationRelativeTo(null);
     }
 }
