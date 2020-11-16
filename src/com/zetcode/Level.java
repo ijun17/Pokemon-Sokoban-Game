@@ -5,10 +5,10 @@ import java.util.Collections;
 
 public class Level
 {
-    public ArrayList<String> levels = new ArrayList<>();
+    static public ArrayList<String> levels = new ArrayList<>();
     
-    public Level()
-    {
+    static {
+    	
         Collections.addAll(levels   , "\n   ###\n"
                                     + "   #.#\n"
                                     + "   # #\n"
@@ -138,7 +138,7 @@ public class Level
                                     + "        #    ####\n"
                                     + "        ######\n" );
     }
-    public String getLevel(int n) {
+    static public String getLevel(int n) {
     	String map = levels.get(n).toString();
     	return map;
     }

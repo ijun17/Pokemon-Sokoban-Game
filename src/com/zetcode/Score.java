@@ -70,7 +70,7 @@ public class Score {
 		}
 	}
 	
-	public void addStepCount() {stepCount++;}
+	public void addStepCount(int num) {stepCount+=num;}
 	
 	public int getScoreRecord() {return recordStepCount;}
 	public int getStepCount() {return stepCount;}

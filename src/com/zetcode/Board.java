@@ -25,8 +25,10 @@ public class Board extends JPanel {
 
 	public Board(int lv) {
 		gdm = new GameDataManager(lv);
-
 		setLayout(null);
+		l=lv;
+		
+		//백 버튼
 		back.setOpaque(false);
 		back.setBorderPainted(false);
 		back.setContentAreaFilled(false);
@@ -42,15 +44,15 @@ public class Board extends JPanel {
 				}
 			}
 		});
-
 		back.setFocusable(false);
-
-		l=lv;
-
+		
+		//걸음수 표시
 		stepCountLabel = new JLabel("걸음수: "+gdm.getStepCount(), JLabel.RIGHT);
 		stepCountLabel.setFont(new Font("맑은고딕",Font.BOLD, 14));
 		add(stepCountLabel);
 		stepCountLabel.setBounds(15, 10, 100, 20);
+		
+		//보드 페인트
 		initBoard(lv);
 	}
 
@@ -72,12 +74,9 @@ public class Board extends JPanel {
 	private void buildWorld(Graphics g) {
 		g.setColor(new Color(217, 230, 165));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-
 		stepCountLabel.setText("걸음수: "+gdm.getStepCount());
-
 		ArrayList<Actor> world = new ArrayList<>();
 		world = gdm.getAllActor();
-
 		for (int i = 0; i < world.size(); i++) {
 			Actor item = world.get(i);
 			if (item instanceof Player || item instanceof Baggage) {                
@@ -87,7 +86,6 @@ public class Board extends JPanel {
 			}
 			if (gdm.isCompleted()) {               
 				g.setColor(new Color(0, 0, 0));
-
 				if(gdm.getGoldenBall()) {
 					g.drawString("Success", 150, 20);
 				}
@@ -102,34 +100,33 @@ public class Board extends JPanel {
 		super.paintComponent(g);
 		buildWorld(g);
 	}
-
+	
 	public void replay() {
 		this.mode="replay";
 		int []key = {KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN,
 				KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, KeyEvent.VK_S};
-
 		Replay r = new Replay(l);
 		r.readReplay();
 		int moveLength = r.getMovingKeyLength();
-			Timer timer = new Timer();
-			TimerTask task = new TimerTask(){
-				public void run() {
-					if(moveLength-1==r.getNowMove())timer.cancel();
-					int temp = r.getNextMove();
-					//System.out.println("Board : replay : temp = "+temp);
-					gdm.updateGameData(key[temp]);
-					repaint();
-				}
-			};
-			timer.schedule(task, 1000, 200);
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask(){
+			public void run() {
+				if(moveLength-1==r.getNowMove())timer.cancel();
+				int temp = r.getNextMove();
+				gdm.updateGameData(key[temp]);
+				repaint();
+			}
+		};
+		timer.schedule(task, 1000, 200);
 	}
 
 	private class TAdapter extends KeyAdapter{
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if(mode.equals("play")) gdm.updateGameData(e.getKeyCode());
-			repaint();
+			if(mode.equals("play")) {
+				gdm.updateGameData(e.getKeyCode());
+				repaint();
+			}
 		}
 	}
-
 }

@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.awt.event.KeyEvent;
 
 public class ActorManager {
-	public static int SPACE = 20;
-	public static int [][]direction = {{SPACE, 0}, {-SPACE, 0}, {0, SPACE}, {0, -SPACE}};
+	final public int SPACE = 20;
+	final public int [][]vectors = {{SPACE, 0}, {-SPACE, 0}, {0, SPACE}, {0, -SPACE}};
 
 
 	private ArrayList<Wall> walls;
@@ -44,7 +44,7 @@ public class ActorManager {
 	}
 
 	public boolean movePlayer(int moveKeyNum){
-		System.out.println("AM : movePlayer : moveKeyNum = "+moveKeyNum);
+		//System.out.println("AM : movePlayer : moveKeyNum = "+moveKeyNum);
 		
 		int dir = moveKeyNum%4; // 0:왼쪽, 1:오른쪽 2:위쪽 3:아래쪽
 		int playerNum = moveKeyNum/4; //키 인텍스가 0~3이면 플레이어0, 키 인텍스가 4~7이면 플레이어1
@@ -53,7 +53,7 @@ public class ActorManager {
 		if(checkBagCollision(players.get(playerNum), dir))return false;
 
 		Player player = players.get(moveKeyNum/4);
-		player.move(-direction[dir][0], -direction[dir][1]);
+		player.move(-vectors[dir][0], -vectors[dir][1]);
 		return true;
 	}
 
@@ -84,11 +84,38 @@ public class ActorManager {
 					if(checkWallCollision(bag, dir))return true;
 				}
 				lastMoveBag = bag;
-				bag.move(-direction[dir][0], -direction[dir][1]);
+				bag.move(-vectors[dir][0], -vectors[dir][1]);
 			}
 		}
 		return false;
 	}
+	
+//	public void undo(int moveKeyNum) {
+//		int reversDir[] = {1,0,3,2};
+//		int dir = moveKeyNum%4;
+//		Player player = players.get(moveKeyNum/4);
+//		Baggage bag = null;
+//		
+//		for(int i=0; i<baggs.size(); i++) {
+//			if(player.isCollision(baggs.get(i), dir)){
+//				bag =baggs.get(i);
+//				break;
+//			}
+//		}
+//		player.move(-vectors[reversDir[dir]][0],  
+//				-vectors[reversDir[dir]][1]);
+//		//플레이어 이미지 그대로 하기 위해서
+//		player.move(-vectors[reversDir[dir]][0],  
+//				-vectors[reversDir[dir]][1]);
+//		player.move(-vectors[dir][0],  
+//				-vectors[dir][1]);
+//		//
+//		if(bag != null) {
+//			bag.move(-vectors[reversDir[dir]][0],  
+//					-vectors[reversDir[dir]][1]);
+//		}
+//	}
+	
 	public ArrayList<Area> getAreas() {return areas;}
 	public ArrayList<Baggage> getBaggs() {return baggs;}
 	public ArrayList<Wall> getWalls() {return walls;}

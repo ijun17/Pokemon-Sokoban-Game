@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class GameDataManager {
-	private Level level;
 	private Score score;
 	private ActorManager actorManager;
 	private Replay replay;
@@ -13,12 +12,12 @@ public class GameDataManager {
 	private boolean isCompleted;
 	private int levelNum;
 	private boolean goldenBall;
+	private int playerCount;
 
 	private int w=0;
 	private int h=0;
 
 	public GameDataManager(int lv) {
-		level = new Level();
 		score = new Score(lv);
 		actorManager = new ActorManager();
 		replay = new Replay(lv);
@@ -26,8 +25,9 @@ public class GameDataManager {
 		isCompleted = false;
 		levelNum = lv;
 		goldenBall=false;
+		playerCount = 0;
 
-		readMap(level.getLevel(lv));
+		readMap(Level.getLevel(lv));
 	}
 
 	public void readMap(String map) {
@@ -61,6 +61,7 @@ public class GameDataManager {
 
 			case '@':
 				actorManager.addActor(new Player(x, y));
+				playerCount++;
 				break;
 
 			default:
@@ -83,7 +84,6 @@ public class GameDataManager {
 		
 		ArrayList<Baggage> balls = actorManager.getBalls();
 		ArrayList<Area> areas = actorManager.getAreas();
-		//System.out.println(balls.size()+" "+areas.size());
 		
 		int nOfBalls = balls.size();
 		int finishedBags = 0;
@@ -111,25 +111,28 @@ public class GameDataManager {
 		else return false;
 	}
 	public void updateGameData(int keyCode) {
-
-		if (isCompleted()) {
-			return;
-		}
+		if (isCompleted()) {return;}
 
 		//player move
 		int []key = {KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN,
 				KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, KeyEvent.VK_S};
 
 		for(int i=0; i<key.length; i++) {
-			if(keyCode == key[i] && i/4<=levelNum/5) {
+			if(keyCode == key[i] && i/4<playerCount) {
 				boolean isMoved = actorManager.movePlayer(i);
 				if(isMoved) {//성공적으로 움직이면
-					score.addStepCount();
+					score.addStepCount(1);
 					replay.addMovingKey(i);
 				}
 			}
 		}
-
+//		if(keyCode == KeyEvent.VK_U) {
+//			int keyNum = replay.removeLast();
+//			if(keyNum>-1) {
+//				actorManager.undo(keyNum);
+//			score.addStepCount(-1);
+//			}
+//		}
 		if(keyCode == KeyEvent.VK_R) {}
 		if(keyCode == KeyEvent.VK_N) {}
 		if(keyCode == KeyEvent.VK_M) {}
