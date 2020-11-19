@@ -14,6 +14,8 @@ public class ActorManager {
 	private ArrayList<Area> areas;
 	private ArrayList<Baggage> balls;
 	private ArrayList<Player> players;
+	
+	private ArrayList<Baggage> recordMovedBaggage = new ArrayList<Baggage>();
 
 	private Baggage lastMoveBag;
 
@@ -85,36 +87,30 @@ public class ActorManager {
 				}
 				lastMoveBag = bag;
 				bag.move(-vectors[dir][0], -vectors[dir][1]);
+				recordMovedBaggage.add(0, bag);
+				return false;
 			}
 		}
+		recordMovedBaggage.add(0, null);
 		return false;
 	}
 	
-//	public void undo(int moveKeyNum) {
-//		int reversDir[] = {1,0,3,2};
-//		int dir = moveKeyNum%4;
-//		Player player = players.get(moveKeyNum/4);
-//		Baggage bag = null;
-//		
-//		for(int i=0; i<baggs.size(); i++) {
-//			if(player.isCollision(baggs.get(i), dir)){
-//				bag =baggs.get(i);
-//				break;
-//			}
-//		}
-//		player.move(-vectors[reversDir[dir]][0],  
-//				-vectors[reversDir[dir]][1]);
-//		//플레이어 이미지 그대로 하기 위해서
-//		player.move(-vectors[reversDir[dir]][0],  
-//				-vectors[reversDir[dir]][1]);
-//		player.move(-vectors[dir][0],  
-//				-vectors[dir][1]);
-//		//
-//		if(bag != null) {
-//			bag.move(-vectors[reversDir[dir]][0],  
-//					-vectors[reversDir[dir]][1]);
-//		}
-//	}
+	public void undo(int moveKeyNum) {
+		int reversDir[] = {1,0,3,2};
+		int dir = moveKeyNum%4;
+		Player player = players.get(moveKeyNum/4);
+		//배기지 이동
+		if(recordMovedBaggage.get(0)!=null) {
+			recordMovedBaggage.get(0).move(-vectors[reversDir[dir]][0],  
+					-vectors[reversDir[dir]][1]);
+		}
+		recordMovedBaggage.remove(0);
+		//플레이어 이동
+		player.move(-vectors[reversDir[dir]][0], -vectors[reversDir[dir]][1]);
+		//플레이어 이미지 그대로 하기 위해서
+		player.move(-vectors[reversDir[dir]][0], -vectors[reversDir[dir]][1]);
+		player.move(-vectors[dir][0], -vectors[dir][1]);
+	}
 	
 	public ArrayList<Area> getAreas() {return areas;}
 	public ArrayList<Baggage> getBaggs() {return baggs;}

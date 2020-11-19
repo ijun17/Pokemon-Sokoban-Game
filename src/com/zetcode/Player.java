@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 
 public class Player extends Actor {
 	private int playerImageNum=1;
+	private int state=0;
 
     public Player(int x, int y) {
         super(x, y);
@@ -24,9 +25,6 @@ public class Player extends Actor {
         ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+".png");
         Image image = iicon.getImage();
         setImage(image);
-        //
-        
-        //
     }
     
     public void setPlayerImage(int num) {
@@ -45,8 +43,6 @@ public class Player extends Actor {
 
 
     public void move(int x, int y) {
-    	
-    	
         int dx = x() + x;
         int dy = y() + y;
         

@@ -126,15 +126,19 @@ public class GameDataManager {
 				}
 			}
 		}
-//		if(keyCode == KeyEvent.VK_U) {
-//			int keyNum = replay.removeLast();
-//			if(keyNum>-1) {
-//				actorManager.undo(keyNum);
-//			score.addStepCount(-1);
-//			}
-//		}
+		
+		if(keyCode == KeyEvent.VK_U) {
+			int keyNum = replay.removeLast();
+			if(keyNum>-1) {
+				actorManager.undo(keyNum);
+			score.addStepCount(-1);
+			}
+		}
+		
 		if(keyCode == KeyEvent.VK_R) {}
-		if(keyCode == KeyEvent.VK_N) {}
+		if(keyCode == KeyEvent.VK_N) {
+			actorManager.getPlayers().get(0).setPlayerImage(1);
+		}
 		if(keyCode == KeyEvent.VK_M) {}
 	}
 
