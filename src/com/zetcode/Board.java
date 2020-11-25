@@ -72,7 +72,7 @@ public class Board extends JPanel {
 
 
 	private void buildWorld(Graphics g) {
-		g.setColor(new Color(217, 230, 165));
+		g.setColor(new Color(206, 226, 122));//
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		stepCountLabel.setText("°ÉÀ½¼ö: "+gdm.getStepCount());
 		ArrayList<Actor> world = new ArrayList<>();
@@ -84,13 +84,16 @@ public class Board extends JPanel {
 			} else {
 				g.drawImage(item.getImage(), item.x(), item.y(), this);
 			}
-			if (gdm.isCompleted()) {               
-				g.setColor(new Color(0, 0, 0));
-				if(gdm.getGoldenBall()) {
-					g.drawString("Success", 150, 20);
+			if (gdm.isCompleted()) {
+				g.setFont(new Font("Sans-serif", Font.BOLD, 18));
+				if(gdm.isCaughtPokemon()) {
+					g.setColor(Color.ORANGE);
+					g.drawString("Success", 120, 25);
 				}
-				else 
-					g.drawString("Failed", 150, 20);
+				else {
+					g.setColor(Color.RED);
+					g.drawString("Failed", 120, 25);
+				}
 			}
 		}
 	}

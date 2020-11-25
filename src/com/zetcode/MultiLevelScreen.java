@@ -61,7 +61,7 @@ public class MultiLevelScreen extends JPanel {
 				clearLevel++;
 			}
 			scoreLabel.setFont(new Font("¸¼Àº°íµñ",Font.BOLD, 12));
-			scoreLabel.setBounds(300, 60+35*(i-5) , 120, 30);
+			scoreLabel.setBounds(170, 60+35*(i-5) , 120, 30);
 			add(scoreLabel);
 		}
 		
@@ -73,7 +73,7 @@ public class MultiLevelScreen extends JPanel {
 			levelBtn[i].setBorderPainted(false);
 			levelBtn[i].setContentAreaFilled(false);
 			levelBtn[i].setOpaque(false);
-			levelBtn[i].setBounds(157, 60+35*i, 120, 30);
+			levelBtn[i].setBounds(50, 60+35*i, 120, 30);
 			add(levelBtn[i]);
 			final int tmp = i;
 			levelBtn[i].addActionListener(new ActionListener() {

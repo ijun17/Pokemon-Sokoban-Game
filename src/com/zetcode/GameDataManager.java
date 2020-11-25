@@ -11,7 +11,7 @@ public class GameDataManager {
 
 	private boolean isCompleted;
 	private int levelNum;
-	private boolean goldenBall;
+	private boolean caughtPokemon;
 	private int playerCount;
 
 	private int w=0;
@@ -21,12 +21,10 @@ public class GameDataManager {
 		score = new Score(lv);
 		actorManager = new ActorManager();
 		replay = new Replay(lv);
-
 		isCompleted = false;
 		levelNum = lv;
-		goldenBall=false;
+		caughtPokemon=false;
 		playerCount = 0;
-
 		readMap(Level.getLevel(lv));
 	}
 
@@ -35,6 +33,7 @@ public class GameDataManager {
 		int SPACE = 20;
 		int x=OFFSET;
 		int y=OFFSET;
+		actorManager.addActor(new Pokemon(0,0,3));
 
 		for (int i = 0; i < map.length(); i++) {
 			char item = map.charAt(i);
@@ -81,24 +80,10 @@ public class GameDataManager {
 
 	public boolean isCompleted() {
 		if(isCompleted)return true;	
-		
-		ArrayList<Baggage> balls = actorManager.getBalls();
-		ArrayList<Area> areas = actorManager.getAreas();
-		
-		int nOfBalls = balls.size();
-		int finishedBags = 0;
-		for (int i = 0; i < nOfBalls; i++) {
-			Baggage bag = balls.get(i);
-			for (int j = 0; j < nOfBalls; j++) {
-				Area area =  areas.get(j);
-				if (bag.x() == area.x() && bag.y() == area.y()) {
-					finishedBags += 1;
-				}
-			}
-		}
-		if (finishedBags == nOfBalls) {
-			if(actorManager.getLastMoveBag() instanceof GoldenBall) {
-				goldenBall=true;
+		int emptyArea = actorManager.getEmptyArea();
+		if (emptyArea == 0) {
+			if(actorManager.getCaughtPokemon()) {
+				caughtPokemon=true;
 				Sound.Play(Resource.musicDir+"Victory.wav");
 				if(score.getScoreRecord()>score.getStepCount()) {
 					score.updateScore();
@@ -131,15 +116,27 @@ public class GameDataManager {
 			int keyNum = replay.removeLast();
 			if(keyNum>-1) {
 				actorManager.undo(keyNum);
-			score.addStepCount(-1);
+				score.addStepCount(-1);
 			}
 		}
 		
-		if(keyCode == KeyEvent.VK_R) {}
-		if(keyCode == KeyEvent.VK_N) {
-			actorManager.getPlayers().get(0).setPlayerImage(1);
+		if(keyCode == KeyEvent.VK_R) {
+			score = new Score(levelNum);
+			actorManager = new ActorManager();
+			replay = new Replay(levelNum);
+			isCompleted = false;
+			caughtPokemon=false;
+			playerCount = 0;
+			readMap(Level.getLevel(levelNum));
 		}
-		if(keyCode == KeyEvent.VK_M) {}
+		if(keyCode == KeyEvent.VK_M) {
+			actorManager.getPlayers().get(0).setPlayerImage(1);
+			actorManager.getPlayers().get(0).playerRestart();
+		}
+		if(keyCode == KeyEvent.VK_N && playerCount == 2) {
+			actorManager.getPlayers().get(1).setPlayerImage(1);
+			actorManager.getPlayers().get(1).playerRestart();
+		}
 	}
 
 	public int getStepCount() {return score.getStepCount();}
@@ -149,9 +146,10 @@ public class GameDataManager {
 		allActor.addAll(actorManager.getWalls());
 		allActor.addAll(actorManager.getBaggs());
 		allActor.addAll(actorManager.getPlayers());
+		allActor.add(actorManager.getPokemon());
 		return allActor;
 	}
-	public boolean getGoldenBall() {return goldenBall;}
+	public boolean isCaughtPokemon() {return caughtPokemon;}
 	public int getBoardWidth() {return w;}
 	public int getBoardHeight() {return h;}
 }

@@ -14,10 +14,10 @@ public class ActorManager {
 	private ArrayList<Area> areas;
 	private ArrayList<Baggage> balls;
 	private ArrayList<Player> players;
+	private Pokemon pokemon;
 	
 	private ArrayList<Baggage> recordMovedBaggage = new ArrayList<Baggage>();
-
-	private Baggage lastMoveBag;
+	private boolean caughtPokemon=false;
 
 	public ActorManager() {
 		walls = new ArrayList<>();
@@ -25,6 +25,7 @@ public class ActorManager {
 		areas = new ArrayList<>();
 		balls = new ArrayList<>();
 		players = new ArrayList<>();
+		pokemon = null; //피카츄
 	}
 
 	public void addActor(Actor actor) {
@@ -42,6 +43,8 @@ public class ActorManager {
 			players.add((Player)actor);
 		}else if(actor instanceof Wall) {
 			walls.add((Wall)actor);
+		}else if(actor instanceof Pokemon) {
+			pokemon=(Pokemon)actor;
 		}
 	}
 
@@ -68,7 +71,6 @@ public class ActorManager {
 	}
 
 	private boolean checkBagCollision(Player player, int dir) {
-
 		Player otherPlayer;
 		if(players.size()==1)otherPlayer=null;
 		else if(player.equals(players.get(0)))otherPlayer = players.get(1);
@@ -85,7 +87,6 @@ public class ActorManager {
 					}
 					if(checkWallCollision(bag, dir))return true;
 				}
-				lastMoveBag = bag;
 				bag.move(-vectors[dir][0], -vectors[dir][1]);
 				recordMovedBaggage.add(0, bag);
 				return false;
@@ -95,19 +96,38 @@ public class ActorManager {
 		return false;
 	}
 	
+	public int getEmptyArea() {
+		int nOfAreas = areas.size();
+		int nOfEmptyAreas = nOfAreas;
+		Area emptyArea=null;
+		for (int i = 0; i < nOfAreas; i++) {
+			Area area =  areas.get(i);
+			for (int j = 0; j < nOfAreas; j++) {
+				Baggage bag = balls.get(j);
+				if (bag.x() == area.x() && bag.y() == area.y()) {
+					nOfEmptyAreas --;
+					j=nOfAreas;//탈출
+				}else if(j == nOfAreas-1)emptyArea=area;
+			}
+		}
+		if(nOfEmptyAreas==0) {
+			caughtPokemon = pokemon.catchPokemon(getLastMoveBag());
+		}else if(nOfEmptyAreas==1) {
+			pokemon.apearPokemon(emptyArea);
+		}else pokemon.removePokemon();
+		return nOfEmptyAreas;
+	}
+	
 	public void undo(int moveKeyNum) {
 		int reversDir[] = {1,0,3,2};
 		int dir = moveKeyNum%4;
 		Player player = players.get(moveKeyNum/4);
-		//배기지 이동
 		if(recordMovedBaggage.get(0)!=null) {
 			recordMovedBaggage.get(0).move(-vectors[reversDir[dir]][0],  
 					-vectors[reversDir[dir]][1]);
 		}
 		recordMovedBaggage.remove(0);
-		//플레이어 이동
 		player.move(-vectors[reversDir[dir]][0], -vectors[reversDir[dir]][1]);
-		//플레이어 이미지 그대로 하기 위해서
 		player.move(-vectors[reversDir[dir]][0], -vectors[reversDir[dir]][1]);
 		player.move(-vectors[dir][0], -vectors[dir][1]);
 	}
@@ -117,5 +137,7 @@ public class ActorManager {
 	public ArrayList<Wall> getWalls() {return walls;}
 	public ArrayList<Baggage> getBalls() {return balls;}
 	public ArrayList<Player> getPlayers() {return players;}
-	public Baggage getLastMoveBag() {return lastMoveBag;}
+	public Baggage getLastMoveBag() {return recordMovedBaggage.get(0);}
+	public Pokemon getPokemon() {return pokemon;}
+	public boolean getCaughtPokemon() {return caughtPokemon;}
 }
