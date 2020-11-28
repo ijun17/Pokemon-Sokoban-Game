@@ -29,6 +29,7 @@ public class Board extends JPanel {
 		l=lv;
 		
 		//น้ น๖ฦฐ
+		
 		back.setOpaque(false);
 		back.setBorderPainted(false);
 		back.setContentAreaFilled(false);

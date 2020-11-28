@@ -33,7 +33,7 @@ public class GameDataManager {
 		int SPACE = 20;
 		int x=OFFSET;
 		int y=OFFSET;
-		actorManager.addActor(new Pokemon(0,0,3));
+		actorManager.addActor(new Pokemon(0,0,levelNum));
 
 		for (int i = 0; i < map.length(); i++) {
 			char item = map.charAt(i);
@@ -80,7 +80,7 @@ public class GameDataManager {
 
 	public boolean isCompleted() {
 		if(isCompleted)return true;	
-		int emptyArea = actorManager.getEmptyArea();
+		int emptyArea = actorManager.getNumberOfEmptyArea();
 		if (emptyArea == 0) {
 			if(actorManager.getCaughtPokemon()) {
 				caughtPokemon=true;
@@ -130,12 +130,10 @@ public class GameDataManager {
 			readMap(Level.getLevel(levelNum));
 		}
 		if(keyCode == KeyEvent.VK_M) {
-			actorManager.getPlayers().get(0).setPlayerImage(1);
-			actorManager.getPlayers().get(0).playerRestart();
+			actorManager.getPlayers().get(0).changePlayerImage();
 		}
 		if(keyCode == KeyEvent.VK_N && playerCount == 2) {
-			actorManager.getPlayers().get(1).setPlayerImage(1);
-			actorManager.getPlayers().get(1).playerRestart();
+			actorManager.getPlayers().get(1).changePlayerImage();
 		}
 	}
 

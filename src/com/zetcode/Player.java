@@ -13,8 +13,9 @@ import javax.swing.ImageIcon;
 
 
 public class Player extends Actor {
+	private static final String []playerImageDir = {"_left", "_right", "_back", ""};
 	private int playerImageNum=1;
-	private int state=0;
+	private int playerDir=3;
 
     public Player(int x, int y) {
         super(x, y);
@@ -22,53 +23,34 @@ public class Player extends Actor {
     }
 
     private void initPlayer() {
-        ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+".png");
+        ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+playerImageDir[playerDir]+".png");
         Image image = iicon.getImage();
         setImage(image);
     }
     
-    public void setPlayerImage(int num) {
-    	playerImageNum += num;
+    public void changePlayerImage() {
+    	playerImageNum ++;
     	if( playerImageNum > 5)
     		playerImageNum = 1;
+    	initPlayer();
     }
     
-    public String getPlayerImageName() {
-    	return "sokoban"+playerImageNum+".png";
-    }
-    
-    public void playerRestart() {
+    public void setPlayerDir(int dir) {
+    	//dir 0:왼쪽, 1:오른쪽 2:위쪽 3:아래쪽
+    	playerDir = dir;
     	initPlayer();
     }
 
-
-    public void move(int x, int y) {
-        int dx = x() + x;
-        int dy = y() + y;
+    public void move(int dir) {
+    	int SPACE = 20;
+    	int [][]vectors = {{SPACE, 0}, {-SPACE, 0}, {0, SPACE}, {0, -SPACE}};
+    	
+        int dx = x() - vectors[dir][0];
+        int dy = y() - vectors[dir][1];
         
         setX(dx);
         setY(dy);
         
-        if(x < 0) {
-            ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+"_left.png");
-             Image image = iicon.getImage();
-             setImage(image);
-         }
-         if(x > 0) {
-            ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+"_right.png");
-             Image image = iicon.getImage();
-             setImage(image);
-         }
-         if(y < 0) {
-            ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+"_back.png");
-             Image image = iicon.getImage();
-             setImage(image);
-         }
-         if(y > 0) {
-            ImageIcon iicon = new ImageIcon(Resource.actorDir + "sokoban"+playerImageNum+".png");
-             Image image = iicon.getImage();
-             setImage(image);
-         }
-
+        setPlayerDir(dir);
     }
 }

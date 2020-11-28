@@ -5,10 +5,6 @@ import java.util.Collection;
 import java.awt.event.KeyEvent;
 
 public class ActorManager {
-	final public int SPACE = 20;
-	final public int [][]vectors = {{SPACE, 0}, {-SPACE, 0}, {0, SPACE}, {0, -SPACE}};
-
-
 	private ArrayList<Wall> walls;
 	private ArrayList<Baggage> baggs;
 	private ArrayList<Area> areas;
@@ -49,8 +45,6 @@ public class ActorManager {
 	}
 
 	public boolean movePlayer(int moveKeyNum){
-		//System.out.println("AM : movePlayer : moveKeyNum = "+moveKeyNum);
-		
 		int dir = moveKeyNum%4; // 0:왼쪽, 1:오른쪽 2:위쪽 3:아래쪽
 		int playerNum = moveKeyNum/4; //키 인텍스가 0~3이면 플레이어0, 키 인텍스가 4~7이면 플레이어1
 		
@@ -58,7 +52,7 @@ public class ActorManager {
 		if(checkBagCollision(players.get(playerNum), dir))return false;
 
 		Player player = players.get(moveKeyNum/4);
-		player.move(-vectors[dir][0], -vectors[dir][1]);
+		player.move(dir);
 		return true;
 	}
 
@@ -87,7 +81,7 @@ public class ActorManager {
 					}
 					if(checkWallCollision(bag, dir))return true;
 				}
-				bag.move(-vectors[dir][0], -vectors[dir][1]);
+				bag.move(dir);
 				recordMovedBaggage.add(0, bag);
 				return false;
 			}
@@ -96,7 +90,7 @@ public class ActorManager {
 		return false;
 	}
 	
-	public int getEmptyArea() {
+	public int getNumberOfEmptyArea() {
 		int nOfAreas = areas.size();
 		int nOfEmptyAreas = nOfAreas;
 		Area emptyArea=null;
@@ -123,13 +117,11 @@ public class ActorManager {
 		int dir = moveKeyNum%4;
 		Player player = players.get(moveKeyNum/4);
 		if(recordMovedBaggage.get(0)!=null) {
-			recordMovedBaggage.get(0).move(-vectors[reversDir[dir]][0],  
-					-vectors[reversDir[dir]][1]);
+			recordMovedBaggage.get(0).move(reversDir[dir]);
 		}
 		recordMovedBaggage.remove(0);
-		player.move(-vectors[reversDir[dir]][0], -vectors[reversDir[dir]][1]);
-		player.move(-vectors[reversDir[dir]][0], -vectors[reversDir[dir]][1]);
-		player.move(-vectors[dir][0], -vectors[dir][1]);
+		player.move(reversDir[dir]);
+		player.setPlayerDir(dir);
 	}
 	
 	public ArrayList<Area> getAreas() {return areas;}

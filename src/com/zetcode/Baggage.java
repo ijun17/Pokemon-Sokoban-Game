@@ -18,10 +18,12 @@ public class Baggage extends Actor {
         setImage(image);
     }
 
-    public void move(int x, int y) {
-        
-        int dx = x() + x;
-        int dy = y() + y;
+    public void move(int dir) {
+    	int SPACE = 20;
+    	int [][]vectors = {{SPACE, 0}, {-SPACE, 0}, {0, SPACE}, {0, -SPACE}};
+    	
+        int dx = x() - vectors[dir][0];
+        int dy = y() - vectors[dir][1];
         
         setX(dx);
         setY(dy);

@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class MultiLevelScreen extends JPanel {
-	private JButton[] levelBtn;
-	private JButton[] replayBtn;
 	private JButton back;
 	private JLabel label;
 	private Image menuImage;
@@ -46,62 +44,10 @@ public class MultiLevelScreen extends JPanel {
 		label.setBounds(-95, 20, 620, 40);
 		add(label);
 		
-		
-		//Score
-		for(int i=5; i<10; i++) {
-			Score score = new Score(i);
-			int stepCount = score.getScoreRecord();
-			JLabel scoreLabel;
-			if(stepCount == 99999999) {
-				scoreLabel = new JLabel("not completed");
-				scoreLabel.setForeground(Color.GRAY);
-			}else {
-				scoreLabel = new JLabel("Score: "+ stepCount);
-				scoreLabel.setForeground(Color.ORANGE);
-				clearLevel++;
-			}
-			scoreLabel.setFont(new Font("맑은고딕",Font.BOLD, 12));
-			scoreLabel.setBounds(170, 60+35*(i-5) , 120, 30);
-			add(scoreLabel);
+		//levelButton
+		for(int i=5;i<10;i++) {
+			makeLevelButton(i);
 		}
-		
-		
-		//버튼들
-		levelBtn = new JButton[5];
-		for(int i=0; i<5; i++) {
-			levelBtn[i] = new JButton(new ImageIcon(Resource.buttonDir+"Level"+(i+1)+".png"));
-			levelBtn[i].setBorderPainted(false);
-			levelBtn[i].setContentAreaFilled(false);
-			levelBtn[i].setOpaque(false);
-			levelBtn[i].setBounds(50, 60+35*i, 120, 30);
-			add(levelBtn[i]);
-			final int tmp = i;
-			levelBtn[i].addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					setVisible(false);
-					ScreenManager.setPanel("board-play", tmp+5);
-				}
-			});
-		}
-
-		//다시보기 버튼들
-		replayBtn = new JButton[clearLevel];
-		for(int i=0; i<clearLevel; i++) {
-			replayBtn[i] = new JButton("replay");
-			replayBtn[i].setBorderPainted(false);
-			replayBtn[i].setContentAreaFilled(false);
-			//replayBtn[i].setOpaque(false);
-			replayBtn[i].setBounds(300, 60+35*i, 120, 30);
-			add(replayBtn[i]);
-			final int tmp = i;
-			replayBtn[i].addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					setVisible(false);
-					ScreenManager.setPanel("board-replay", tmp+5);
-				}
-			});
-		}
-
 		//백버튼
 		back = new JButton(new ImageIcon(Resource.buttonDir+"BACK.png"));
 		back.setBorderPainted(false);
@@ -117,5 +63,53 @@ public class MultiLevelScreen extends JPanel {
 		});
 
 		
+	}
+	
+	public void makeLevelButton(int lv) {
+		Score score = new Score(lv);
+		JButton replayBtn = new JButton();
+		JButton levelBtn = new JButton();
+		//levelButton
+		levelBtn = new JButton(new ImageIcon(Resource.buttonDir+"Level"+(lv-4)+".png"));
+		levelBtn.setBorderPainted(false);
+		levelBtn.setContentAreaFilled(false);
+		levelBtn.setOpaque(false);
+		levelBtn.setBounds(50, 60+35*(lv-5), 120, 30);
+		add(levelBtn);
+		final int tmp = lv;
+		if(clearLevel+1>lv-5)levelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				ScreenManager.setPanel("board-play", tmp);
+			}
+		});
+		//score
+		int stepCount = score.getScoreRecord();
+		JLabel scoreLabel;
+		if(stepCount == 99999999) {
+			scoreLabel = new JLabel("not completed");
+			scoreLabel.setForeground(Color.GRAY);
+		}
+		else { //score가 있으면 리플레이 버튼을 만든다
+			clearLevel++;
+			scoreLabel = new JLabel("Score: "+ stepCount);
+			scoreLabel.setForeground(Color.ORANGE);
+			replayBtn = new JButton("replay");
+			replayBtn.setBorderPainted(false);
+			replayBtn.setContentAreaFilled(false);
+			//replayBtn[i].setOpaque(false);
+			replayBtn.setBounds(300, 60+35*(lv-5), 120, 30);
+			add(replayBtn);
+			final int tmp2 = lv;
+			replayBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+					ScreenManager.setPanel("board-replay", tmp2);
+				}
+			});
+		}
+		scoreLabel.setFont(new Font("맑은고딕",Font.BOLD, 12));
+		scoreLabel.setBounds(170, 60+35*(lv-5) , 120, 30);
+		add(scoreLabel);
 	}
 }

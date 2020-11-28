@@ -5,8 +5,9 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class Pokemon extends Actor{
-	static String []pokemonName = {"ÇÇÄ«Ãò.png", "±¸±¸.png", "ÆÄÀÌ¸®.png", "Ä¥»öÁ¶.png", "¹ÂÃ÷.png"};
-	static int []baseCatchRate = {50,50,50,95,95};
+	static String []pokemonName = {"ÇÇÄ«Ãò.png", "±¸±¸.png", "¸®ÀÚ¸ù.png", "°¼¶óµµ½º.png", "Ä¥»öÁ¶.png", 
+									"°­Ã¶Åæ.png","Àá¸¸º¸.png","Çì¶óÅ©·Î½º.png","¸Á³ª´¨.png","¹ÂÃ÷.png"};
+	static int []baseCatchRate = {50,50,80,80,95,80,80,80,90,96};
 	
 	int pokemonType;
 	boolean isApeared=false;
